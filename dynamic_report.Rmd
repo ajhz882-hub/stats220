@@ -1,0 +1,101 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+```
+
+## Study Focus and Distraction Patterns
+Staying focused while studying can be challenging, especially with different distractions around.
+This report explores my study sessions to see how factors like phone use, study time, and types of distraction may relate to my level of focus.
+
+```{r}
+library(tidyverse)
+logged_data <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTDpzU_Zi1tKuh8W9EZh2ylB7X5TCMLanZ8iTma6vCZG5pux4l1uZnogN2zD5dq1pZoSMe-Tg0EkTZ-/pub?gid=1107218588&single=true&output=csv")
+
+latest_data <- logged_data %>%
+  rename(
+    study_time = `Q1..How.long.was.your.study.session...in.minutes.`,
+    time_of_day = `Q2..What.time.of.day.did.study.session.occur.`,
+    location = `Q3..Where.did.you.study.`,
+    phone_use = `Q4..Did.you.use.your.phone.during.study.session.`,
+    distraction = `Q5..What.was.your.main.distraction..if.any..`,
+    focus = `Q6..How.would.you.rate.your.level.of.focus.`
+  )
+
+mean_time <- mean(latest_data$study_time, na.rm = TRUE)
+max_time <- max(latest_data$study_time, na.rm = TRUE)
+min_time <- min(latest_data$study_time, na.rm = TRUE)
+total_sessions <- nrow(latest_data)
+
+```
+
+In total, `r total_sessions` study sessions were recorded. 
+On average, each session lasted about `r round(mean_time, 1)` minutes, 
+with the longest session reaching `r max_time` minutes. 
+This suggests that most study sessions were of moderate length, with some longer sessions as well.
+
+### bar chart 1
+```{r}
+barchart1 <- latest_data %>%
+  ggplot() +
+  geom_bar (aes(x = factor(focus), fill = factor(focus))) +
+  labs(title = "More focus? Less focus?",
+       subtitle = "Distribution of focus levels across all study sessions",
+       x = "Focus Level",
+       y = "Number of Study Sessions"
+       )
+barchart1
+```
+
+This bar chart shows how focus levels are distributed across all study sessions. 
+
+It can be seen that certain focus levels occur more frequently than others, 
+suggesting that my focus is not evenly distributed. 
+
+In particular, focus level 4 appears the most common, indicating that I was generally able to maintain a reasonable level of concentration during most sessions.
+
+### bar chart 2
+```{r}
+barchart2 <- latest_data %>%
+ggplot(aes(x = phone_use, fill = factor(focus)))+
+  geom_bar(position = "dodge") +
+labs(title = "Does phone use relate to focus level?",
+     subtitle = "Comparing phone use and focus levels across study session",
+     x = "Phone Use",
+     y = "Number of Study Sessions"
+     )
+barchart2
+```
+
+This chart compares focus levels between study sessions with and without phone use. 
+Each group represents whether a phone was used, while the colors show different focus levels. 
+
+From the chart, sessions without phone use appear to have slightly higher counts of higher focus levels, 
+while sessions with phone use show more variation across lower and mid-level focus. 
+
+This suggests that phone use may be associated with reduced concentration, although the pattern is not entirely consistent.
+
+### bar chart 3
+```{r}
+barchart3 <- latest_data %>%
+  ggplot(aes(x = distraction, fill = factor(focus)))+
+  geom_bar(position = "dodge") +
+  labs(title = "Focus Level by Type of Distraction",
+       x = "Type of Distraction",
+       y = "Number of Study Sessions"
+  )
+barchart3
+```
+
+The relationship between distraction type and focus is not very clear from this chart. 
+There does not appear to be a strong or consistent pattern across different types of distraction. 
+
+This may suggest that the impact of distraction varies depending on the situation.
