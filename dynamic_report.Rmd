@@ -8,10 +8,6 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
 
 ```
 
-```{css}
-
-```
-
 ## Study Focus and Distraction Patterns
 
 Staying focused while studying is not always easy, especially when there are different kinds of distractions around. In this report, I look at my own study sessions to see how factors like phone use, study time, and types of distraction may relate to my level of focus.
